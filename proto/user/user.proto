@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package user;
+option go_package = "userpb";
+
+// ==========================
+//        USER MODEL
+// ==========================
+message User {
+  int64 id = 1;            // GORM.Model → ID (uint64 OK)
+  int64 telegram_id = 2;
+  string firstname = 3;
+  string lastname = 4;
+  string role = 5;         // teacher / student / admin
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+// ==========================
+//        CREATE USER
+// ==========================
+message CreateUserRequest {
+  int64 telegram_id = 1;
+  string firstname = 2;
+  string lastname = 3;
+  string role = 4;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+// ==========================
+//        UPDATE USER
+// ==========================
+message UpdateUserRequest {
+  int64 id = 1;            // GORM.Model ID
+  string firstname = 2;
+  string lastname = 3;
+  string role = 4;
+}
+
+message UpdateUserResponse {
+  User user = 1;
+}
+
+// ==========================
+//        GET BY ID
+// ==========================
+message GetUserByIDRequest {
+  int64 id = 1;
+}
+
+message GetUserByIDResponse {
+  User user = 1;
+}
+
+// ==========================
+//        LIST USERS
+// ==========================
+message ListUsersRequest {}
+
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+// ==========================
+//   GET USER BY TELEGRAM ID
+// ==========================
+message GetUserByTelegramIDRequest {
+  int64 telegram_id = 1;
+}
+
+message GetUserByTelegramIDResponse {
+  User user = 1;
+}
+
+// ==========================
+//   USER IDs → TELEGRAM IDs
+// ==========================
+message GetTelegramIDsByUserIDsRequest {
+  repeated int64 user_ids = 1;
+}
+
+message GetTelegramIDsByUserIDsResponse {
+  repeated int64 telegram_ids = 1;
+}
+
+// ==========================
+//          SERVICE
+// ==========================
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+
+  rpc GetUserByTelegramID(GetUserByTelegramIDRequest)
+      returns (GetUserByTelegramIDResponse);
+
+  rpc GetTelegramIDsByUserIDs(GetTelegramIDsByUserIDsRequest)
+      returns (GetTelegramIDsByUserIDsResponse);
+}
