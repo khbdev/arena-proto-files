@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package group;
+
+option go_package = "github.com/khbdev/arena-proto-files/proto/group/grouppb";
+
+// =====================
+//       Group
+// =====================
+message Group {
+    uint32 id = 1;
+    string name = 2;
+    uint32 user_id = 3; // teacher ID
+}
+
+// ---------------------
+// Teacher CRUD
+// ---------------------
+message CreateGroupRequest {
+    string name = 1;
+    uint32 user_id = 2;
+}
+
+message CreateGroupResponse {
+    Group group = 1;
+}
+
+message GetGroupsRequest {
+    uint32 user_id = 1; // teacher ID
+}
+
+message GetGroupsResponse {
+    repeated Group groups = 1;
+}
+
+message UpdateGroupRequest {
+    uint32 id = 1;
+    uint32 user_id = 2;
+    string new_name = 3;
+}
+
+message UpdateGroupResponse {
+    Group group = 1;
+}
+
+message DeleteGroupRequest {
+    uint32 id = 1;
+    uint32 user_id = 2;
+}
+
+message DeleteGroupResponse {
+    string message = 1;
+}
+
+// =====================
+//      GroupStudent
+// =====================
+message AddStudentRequest {
+    uint32 group_id = 1;
+    uint32 user_id = 2;
+}
+
+message AddStudentResponse {
+    uint32 group_id = 1;
+    uint32 user_id = 2;
+}
+
+message RemoveStudentRequest {
+    uint32 group_id = 1;
+    uint32 user_id = 2;
+}
+
+message RemoveStudentResponse {
+    string message = 1;
+}
+
+// ---------------------
+// Get students in a group
+// ---------------------
+message GetStudentsByGroupRequest {
+    uint32 group_id = 1;
+}
+
+message GetStudentsByGroupResponse {
+    repeated uint32 user_ids = 1;
+}
+
+// ---------------------
+// List groups for a user
+// ---------------------
+message ListGroupsForUserRequest {
+    uint32 user_id = 1;
+}
+
+message ListGroupsForUserResponse {
+    repeated uint32 group_ids = 1;
+}
+
+// =====================
+//        Service
+// =====================
+service GroupService {
+    // Teacher CRUD
+    rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
+    rpc GetGroups(GetGroupsRequest) returns (GetGroupsResponse);
+    rpc UpdateGroup(UpdateGroupRequest) returns (UpdateGroupResponse);
+    rpc DeleteGroup(DeleteGroupRequest) returns (DeleteGroupResponse);
+
+    // GroupStudent
+    rpc AddStudent(AddStudentRequest) returns (AddStudentResponse);
+    rpc RemoveStudent(RemoveStudentRequest) returns (RemoveStudentResponse);
+
+    // Queries
+    rpc GetStudentsByGroup(GetStudentsByGroupRequest) returns (GetStudentsByGroupResponse);
+    rpc ListGroupsForUser(ListGroupsForUserRequest) returns (ListGroupsForUserResponse);
+}
